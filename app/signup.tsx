@@ -1,19 +1,17 @@
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { Alert } from "react-native";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
-
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { signupStyles as styles } from "./signup.styles";
+  Button,
+  Form,
+  Input,
+  ScrollView,
+  Spinner,
+  Text,
+  XStack,
+  YStack,
+} from "tamagui";
 
 interface SignupFormValues {
   fullName: string;
@@ -25,9 +23,6 @@ interface SignupFormValues {
 export default function SignupScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
 
   const form = useForm({
     defaultValues: {
@@ -57,17 +52,30 @@ export default function SignupScreen() {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor }]}
-      contentContainerStyle={styles.contentContainer}
+      flex={1}
+      backgroundColor="$background"
+      contentContainerStyle={{ padding: 20, alignItems: "center" }}
     >
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.title}>Créer un compte</ThemedText>
-        <ThemedText style={styles.subtitle}>
+      <YStack
+        marginVertical={30}
+        alignItems="center"
+        width="100%"
+        maxWidth={400}
+      >
+        <Text fontSize={32} fontWeight="800" color="$accent" marginBottom={8}>
+          Créer un compte
+        </Text>
+        <Text fontSize={16} color="$muted" fontStyle="italic">
           Rejoignez l'aventure Lootopia
-        </ThemedText>
-      </ThemedView>
+        </Text>
+      </YStack>
 
-      <View style={styles.form}>
+      <Form
+        onSubmit={form.handleSubmit}
+        marginVertical={20}
+        width="100%"
+        maxWidth={400}
+      >
         <form.Field
           name="fullName"
           validators={{
@@ -80,27 +88,43 @@ export default function SignupScreen() {
           }}
         >
           {(field) => (
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Nom complet</ThemedText>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: textColor, borderColor: textColor },
-                  field.state.meta.errors.length > 0 && styles.inputError,
-                ]}
+            <YStack marginBottom={20}>
+              <Text
+                fontSize={14}
+                fontWeight="600"
+                marginBottom={8}
+                color="$accent"
+              >
+                Nom complet
+              </Text>
+              <Input
+                borderWidth={1}
+                borderRadius={6}
+                paddingHorizontal={12}
+                paddingVertical={8}
+                fontSize={14}
+                height={40}
+                borderColor={
+                  field.state.meta.errors.length > 0 ? "$danger" : "$border"
+                }
                 placeholder="Jean Dupont"
-                placeholderTextColor={useThemeColor({}, "icon")}
+                placeholderTextColor="$border"
                 value={field.state.value}
                 onChangeText={field.handleChange}
                 onBlur={field.handleBlur}
-                editable={!loading}
+                disabled={loading}
               />
               {field.state.meta.errors.length > 0 && (
-                <ThemedText style={styles.errorText}>
+                <Text
+                  fontSize={12}
+                  color="$danger"
+                  marginTop={4}
+                  marginLeft={4}
+                >
                   {field.state.meta.errors[0]}
-                </ThemedText>
+                </Text>
               )}
-            </View>
+            </YStack>
           )}
         </form.Field>
 
@@ -116,29 +140,45 @@ export default function SignupScreen() {
           }}
         >
           {(field) => (
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Email</ThemedText>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: textColor, borderColor: textColor },
-                  field.state.meta.errors.length > 0 && styles.inputError,
-                ]}
+            <YStack marginBottom={20}>
+              <Text
+                fontSize={14}
+                fontWeight="600"
+                marginBottom={8}
+                color="$accent"
+              >
+                Email
+              </Text>
+              <Input
+                borderWidth={1}
+                borderRadius={6}
+                paddingHorizontal={12}
+                paddingVertical={8}
+                fontSize={14}
+                height={40}
+                borderColor={
+                  field.state.meta.errors.length > 0 ? "$danger" : "$border"
+                }
                 placeholder="email@example.com"
-                placeholderTextColor={useThemeColor({}, "icon")}
+                placeholderTextColor="$border"
                 value={field.state.value}
                 onChangeText={field.handleChange}
                 onBlur={field.handleBlur}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                editable={!loading}
+                disabled={loading}
               />
               {field.state.meta.errors.length > 0 && (
-                <ThemedText style={styles.errorText}>
+                <Text
+                  fontSize={12}
+                  color="$danger"
+                  marginTop={4}
+                  marginLeft={4}
+                >
                   {field.state.meta.errors[0]}
-                </ThemedText>
+                </Text>
               )}
-            </View>
+            </YStack>
           )}
         </form.Field>
 
@@ -154,28 +194,44 @@ export default function SignupScreen() {
           }}
         >
           {(field) => (
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Mot de passe</ThemedText>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: textColor, borderColor: textColor },
-                  field.state.meta.errors.length > 0 && styles.inputError,
-                ]}
+            <YStack marginBottom={20}>
+              <Text
+                fontSize={14}
+                fontWeight="600"
+                marginBottom={8}
+                color="$accent"
+              >
+                Mot de passe
+              </Text>
+              <Input
+                borderWidth={1}
+                borderRadius={6}
+                paddingHorizontal={12}
+                paddingVertical={8}
+                fontSize={14}
+                height={40}
+                borderColor={
+                  field.state.meta.errors.length > 0 ? "$danger" : "$border"
+                }
                 placeholder="Minimum 6 caractères"
-                placeholderTextColor={useThemeColor({}, "icon")}
+                placeholderTextColor="$border"
                 value={field.state.value}
                 onChangeText={field.handleChange}
                 onBlur={field.handleBlur}
                 secureTextEntry
-                editable={!loading}
+                disabled={loading}
               />
               {field.state.meta.errors.length > 0 && (
-                <ThemedText style={styles.errorText}>
+                <Text
+                  fontSize={12}
+                  color="$danger"
+                  marginTop={4}
+                  marginLeft={4}
+                >
                   {field.state.meta.errors[0]}
-                </ThemedText>
+                </Text>
               )}
-            </View>
+            </YStack>
           )}
         </form.Field>
 
@@ -193,30 +249,44 @@ export default function SignupScreen() {
           }}
         >
           {(field) => (
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>
+            <YStack marginBottom={20}>
+              <Text
+                fontSize={14}
+                fontWeight="600"
+                marginBottom={8}
+                color="$accent"
+              >
                 Confirmer le mot de passe
-              </ThemedText>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: textColor, borderColor: textColor },
-                  field.state.meta.errors.length > 0 && styles.inputError,
-                ]}
+              </Text>
+              <Input
+                borderWidth={1}
+                borderRadius={6}
+                paddingHorizontal={12}
+                paddingVertical={8}
+                fontSize={14}
+                height={40}
+                borderColor={
+                  field.state.meta.errors.length > 0 ? "$danger" : "$border"
+                }
                 placeholder="Confirmez votre mot de passe"
-                placeholderTextColor={useThemeColor({}, "icon")}
+                placeholderTextColor="$border"
                 value={field.state.value}
                 onChangeText={field.handleChange}
                 onBlur={field.handleBlur}
                 secureTextEntry
-                editable={!loading}
+                disabled={loading}
               />
               {field.state.meta.errors.length > 0 && (
-                <ThemedText style={styles.errorText}>
+                <Text
+                  fontSize={12}
+                  color="$danger"
+                  marginTop={4}
+                  marginLeft={4}
+                >
                   {field.state.meta.errors[0]}
-                </ThemedText>
+                </Text>
               )}
-            </View>
+            </YStack>
           )}
         </form.Field>
 
@@ -224,33 +294,43 @@ export default function SignupScreen() {
           selector={(state) => [state.canSubmit, state.isSubmitting]}
         >
           {([canSubmit]) => (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                (!canSubmit || loading) && styles.buttonDisabled,
-              ]}
-              onPress={form.handleSubmit}
-              disabled={!canSubmit || loading}
-              activeOpacity={0.7}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <ThemedText style={styles.buttonText}>S'inscrire</ThemedText>
-              )}
-            </TouchableOpacity>
+            <Form.Trigger asChild>
+              <Button
+                backgroundColor="$accent"
+                marginTop={30}
+                paddingVertical={14}
+                borderRadius={8}
+                alignItems="center"
+                justifyContent="center"
+                disabled={!canSubmit || loading}
+                opacity={!canSubmit || loading ? 0.6 : 1}
+                pressStyle={{ opacity: 0.7 }}
+              >
+                {loading ? (
+                  <Spinner color="#fff" />
+                ) : (
+                  <Text color="#fff" fontSize={18} fontWeight="700">
+                    S'inscrire
+                  </Text>
+                )}
+              </Button>
+            </Form.Trigger>
           )}
         </form.Subscribe>
 
-        <View style={styles.footer}>
-          <ThemedText style={styles.footerText}>
-            Vous avez déjà un compte?{" "}
-          </ThemedText>
-          <TouchableOpacity onPress={() => router.push("/")}>
-            <ThemedText style={styles.loginLink}>Se connecter</ThemedText>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <XStack justifyContent="center" marginTop={24} alignItems="center">
+          <Text fontSize={14}>Vous avez déjà un compte? </Text>
+          <Text
+            fontSize={14}
+            color="$accent"
+            fontWeight="700"
+            textDecorationLine="underline"
+            onPress={() => router.push("/")}
+          >
+            Se connecter
+          </Text>
+        </XStack>
+      </Form>
     </ScrollView>
   );
 }
