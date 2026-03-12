@@ -30,7 +30,9 @@ export function TreasureHeader() {
             onPress={() => router.push("../signup")}
             activeOpacity={0.7}
           >
-            <ThemedText style={styles.signupButtonText}>S'inscrire</ThemedText>
+            <ThemedText style={styles.signupButtonText}>
+              S&apos;inscrire
+            </ThemedText>
           </TouchableOpacity>
         </View>
 

@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -66,7 +67,7 @@ export default function SignupScreen() {
           Créer un compte
         </Text>
         <Text fontSize={16} color="$muted" fontStyle="italic">
-          Rejoignez l'aventure Lootopia
+          Rejoignez l&apos;aventure Lootopia
         </Text>
       </YStack>
 
@@ -310,7 +311,7 @@ export default function SignupScreen() {
                   <Spinner color="#fff" />
                 ) : (
                   <Text color="#fff" fontSize={18} fontWeight="700">
-                    S'inscrire
+                    S&apos;inscrire
                   </Text>
                 )}
               </Button>
@@ -331,6 +332,8 @@ export default function SignupScreen() {
           </Text>
         </XStack>
       </Form>
+
+      <Footer />
     </ScrollView>
   );
 }

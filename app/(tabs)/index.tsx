@@ -1,11 +1,16 @@
 import { ScrollView, StyleSheet } from "react-native";
 
+import { Footer } from "@/components/footer";
 import { TreasureHeader } from "@/components/treasure-header";
 
 export default function HomeScreen() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+    >
       <TreasureHeader />
+      <Footer />
     </ScrollView>
   );
 }
@@ -13,6 +18,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "space-between",
   },
   titleContainer: {
     flexDirection: "row",

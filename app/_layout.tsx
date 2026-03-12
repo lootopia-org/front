@@ -30,6 +30,9 @@ export default function RootLayout() {
             name="modal"
             options={{ presentation: "modal", title: "Modal" }}
           />
+          <Stack.Screen name="about" options={{ title: "À propos" }} />
+          <Stack.Screen name="contact" options={{ title: "Contact" }} />
+          <Stack.Screen name="legal" options={{ title: "Mentions légales" }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
