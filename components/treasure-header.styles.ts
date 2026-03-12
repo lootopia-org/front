@@ -69,4 +69,17 @@ export const treasureHeaderStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
+  loginButton: {
+    borderWidth: 2,
+    borderColor: "#8B4513",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  loginButtonText: {
+    color: "#8B4513",
+    fontSize: 14,
+    fontWeight: "600",
+  },
 });

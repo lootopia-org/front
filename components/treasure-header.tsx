@@ -34,6 +34,14 @@ export function TreasureHeader() {
               S&apos;inscrire
             </ThemedText>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => router.push("../login")}
+            activeOpacity={0.7}
+          >
+            <ThemedText style={styles.loginButtonText}>Se connecter</ThemedText>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.decorativeBottom} />

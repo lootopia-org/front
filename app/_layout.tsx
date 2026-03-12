@@ -1,7 +1,7 @@
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider,
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -33,6 +33,7 @@ export default function RootLayout() {
           <Stack.Screen name="about" options={{ title: "À propos" }} />
           <Stack.Screen name="contact" options={{ title: "Contact" }} />
           <Stack.Screen name="legal" options={{ title: "Mentions légales" }} />
+          <Stack.Screen name="login" options={{ title: "Se connecter" }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
