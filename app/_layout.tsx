@@ -33,7 +33,14 @@ export default function RootLayout() {
           <Stack.Screen name="about" options={{ title: "À propos" }} />
           <Stack.Screen name="contact" options={{ title: "Contact" }} />
           <Stack.Screen name="legal" options={{ title: "Mentions légales" }} />
-          <Stack.Screen name="login" options={{ title: "Se connecter" }} />
+          <Stack.Screen
+            name="login"
+            options={{ title: "Se connecter", headerBackTitle: "Accueil" }}
+          />
+          <Stack.Screen
+            name="signup"
+            options={{ title: "Inscription", headerBackTitle: "Accueil" }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
