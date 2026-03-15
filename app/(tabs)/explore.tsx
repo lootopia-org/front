@@ -1,9 +1,20 @@
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const osmMapHtml = `
+type UserCoords = {
+  latitude: number;
+  longitude: number;
+};
+
+function buildOsmMapHtml(userCoords?: UserCoords) {
+  const centerLat = userCoords?.latitude ?? 48.8566;
+  const centerLng = userCoords?.longitude ?? 2.3522;
+  const hasUserLocation = Boolean(userCoords);
+
+  return `
 <!doctype html>
 <html>
   <head>
@@ -29,7 +40,9 @@ const osmMapHtml = `
       crossorigin=""
     ></script>
     <script>
-      const map = L.map('map', { zoomControl: true }).setView([48.8566, 2.3522], 13);
+      const map = L.map('map', { zoomControl: true }).setView([${centerLat}, ${centerLng}], ${
+        hasUserLocation ? 15 : 13
+      });
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -45,15 +58,69 @@ const osmMapHtml = `
       points.forEach((p) => {
         L.marker([p.lat, p.lng]).addTo(map).bindPopup(p.label);
       });
+
+      ${
+        hasUserLocation
+          ? `
+      const userIcon = L.divIcon({
+        className: 'user-location-dot',
+        html: '<div style="width:14px;height:14px;border-radius:50%;background:#22c55e;border:2px solid #ffffff;box-shadow:0 0 0 4px rgba(34,197,94,0.25);"></div>',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+      });
+      L.marker([${centerLat}, ${centerLng}], { icon: userIcon }).addTo(map).bindPopup('Votre position');
+      `
+          : ""
+      }
     </script>
   </body>
 </html>
 `;
+}
 
 export default function ExploreScreen() {
   const router = useRouter();
-  const html = useMemo(() => osmMapHtml, []);
+  const [userCoords, setUserCoords] = useState<UserCoords | undefined>(
+    undefined,
+  );
+  const [locationStatus, setLocationStatus] = useState<string>(
+    "Position non detectee",
+  );
+  const html = useMemo(() => buildOsmMapHtml(userCoords), [userCoords]);
   const isWeb = Platform.OS === "web";
+
+  const requestUserLocation = useCallback(async () => {
+    if (Platform.OS === "web") {
+      setLocationStatus("Sur web, la carte utilise une position par defaut.");
+      return;
+    }
+
+    try {
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (permission.status !== "granted") {
+        setLocationStatus(
+          "Permission refusee. Active la localisation pour te geolocaliser.",
+        );
+        return;
+      }
+
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      setUserCoords({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+      setLocationStatus("Position detectee et carte centree sur vous.");
+    } catch {
+      setLocationStatus("Impossible de recuperer votre position.");
+    }
+  }, []);
+
+  useEffect(() => {
+    requestUserLocation();
+  }, [requestUserLocation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,6 +132,12 @@ export default function ExploreScreen() {
         <Text style={styles.subtitle}>
           Carte non-Google avec points d&apos;interet Lootopia
         </Text>
+        <Text style={styles.geoStatus}>{locationStatus}</Text>
+        {!isWeb && (
+          <Text style={styles.geoAction} onPress={requestUserLocation}>
+            Actualiser ma position
+          </Text>
+        )}
       </View>
       <View style={styles.mapWrapper}>
         {isWeb ? (
@@ -113,6 +186,17 @@ const styles = StyleSheet.create({
     color: "#cbd5e1",
     marginTop: 4,
     fontSize: 13,
+  },
+  geoStatus: {
+    color: "#e2e8f0",
+    marginTop: 8,
+    fontSize: 12,
+  },
+  geoAction: {
+    color: "#60a5fa",
+    marginTop: 6,
+    fontSize: 12,
+    fontWeight: "700",
   },
   mapWrapper: {
     flex: 1,
