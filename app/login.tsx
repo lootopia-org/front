@@ -1,22 +1,30 @@
 import { Footer } from "@/components/footer";
+import { loginUser, saveAuthToken } from "@/UtilsAuth/auth";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert } from "react-native";
 import {
-    Button,
-    Form,
-    Input,
-    ScrollView,
-    Spinner,
-    Text,
-    XStack,
-    YStack,
+  Button,
+  Form,
+  Input,
+  ScrollView,
+  Spinner,
+  Text,
+  XStack,
+  YStack,
 } from "tamagui";
 
 interface LoginFormValues {
   email: string;
   password: string;
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Une erreur est survenue lors de la connexion";
 }
 
 export default function LoginScreen() {
@@ -31,7 +39,10 @@ export default function LoginScreen() {
     onSubmit: async ({ value }) => {
       setLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const authResult = await loginUser(value);
+        if (authResult.accessToken) {
+          await saveAuthToken(authResult.accessToken);
+        }
 
         Alert.alert("Succès", "Connexion réussie !", [
           {
@@ -39,8 +50,8 @@ export default function LoginScreen() {
             onPress: () => router.push("/(tabs)"),
           },
         ]);
-      } catch {
-        Alert.alert("Erreur", "Une erreur est survenue lors de la connexion");
+      } catch (error) {
+        Alert.alert("Erreur", getErrorMessage(error));
       } finally {
         setLoading(false);
       }

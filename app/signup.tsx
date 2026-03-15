@@ -1,4 +1,5 @@
 import { Footer } from "@/components/footer";
+import { registerUser, saveAuthToken } from "@/UtilsAuth/auth";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -21,6 +22,13 @@ interface SignupFormValues {
   confirmPassword: string;
 }
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Une erreur est survenue lors de l'inscription";
+}
+
 export default function SignupScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -35,16 +43,24 @@ export default function SignupScreen() {
     onSubmit: async ({ value }) => {
       setLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const authResult = await registerUser({
+          fullName: value.fullName,
+          email: value.email,
+          password: value.password,
+        });
+
+        if (authResult.accessToken) {
+          await saveAuthToken(authResult.accessToken);
+        }
 
         Alert.alert("Succès", "Compte créé avec succès!", [
           {
             text: "OK",
-            onPress: () => router.push("/"),
+            onPress: () => router.push("/(tabs)"),
           },
         ]);
       } catch (error) {
-        Alert.alert("Erreur", "Une erreur est survenue lors de l'inscription");
+        Alert.alert("Erreur", getErrorMessage(error));
       } finally {
         setLoading(false);
       }

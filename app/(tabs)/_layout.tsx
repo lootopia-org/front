@@ -1,29 +1,71 @@
-import { Tabs } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import React from "react";
-
-import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Image, Pressable, Text, View } from "react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: true,
-        tabBarButton: HapticTab,
+        tabBarStyle: { display: "none" },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Accueil",
-          headerTitle: "Accueil",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image
+                source={require("../../assets/images/lootopia.png")}
+                style={{ width: 28, height: 28, marginRight: 8 }}
+                resizeMode="contain"
+              />
+              <Text
+                style={{ fontSize: 18, fontWeight: "800", color: "#8B4513" }}
+              >
+                Chasse au Trésor
+              </Text>
+            </View>
+          ),
+          headerRight: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginRight: 12,
+              }}
+            >
+              <Link href="/(tabs)/explore" asChild>
+                <Pressable
+                  style={{
+                    backgroundColor: "#8B4513",
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 8,
+                    marginRight: 8,
+                  }}
+                >
+                  <Text style={{ color: "#fff", fontWeight: "700" }}>
+                    Explorer
+                  </Text>
+                </Pressable>
+              </Link>
+              <Link href="/signup" asChild>
+                <Pressable
+                  style={{
+                    backgroundColor: "#A0522D",
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 8,
+                  }}
+                >
+                  <Text style={{ color: "#fff", fontWeight: "700" }}>
+                    S&apos;inscrire
+                  </Text>
+                </Pressable>
+              </Link>
+            </View>
           ),
         }}
       />
@@ -32,9 +74,13 @@ export default function TabLayout() {
         options={{
           title: "Explorer",
           headerTitle: "Explorer",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profil",
+          headerTitle: "Mon profil",
         }}
       />
     </Tabs>
